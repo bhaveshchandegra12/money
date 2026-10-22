@@ -260,6 +260,36 @@
           <h3 class="section-title" data-i18n="tabSettings">સેટિંગ્સ અને બેકઅપ</h3>
         </div>
 
+        <!-- Quick Actions: Add Transaction & Add Member -->
+        <div class="settings-section-card quick-actions-card">
+          <div class="settings-card-header">
+            <div class="quick-actions-badge" title="નવો વ્યવહાર / સભ્ય">
+              <span>+</span>
+            </div>
+            <div class="quick-actions-header-info">
+              <div class="settings-card-title" data-i18n="quickActionsTitle">નવો વ્યવહાર અને સભ્ય ઉમેરો</div>
+              <div class="quick-stats-row">
+                <span class="quick-stat-item"><span data-i18n="totalMembersCount">કુલ સભ્યો</span>: <strong id="quickStatsMembers">0</strong></span>
+                <span class="quick-stat-dot">•</span>
+                <span class="quick-stat-item"><span data-i18n="totalTxnsCount">કુલ વ્યવહારો</span>: <strong id="quickStatsTxns">0</strong></span>
+              </div>
+            </div>
+          </div>
+          <p class="settings-desc" data-i18n="quickActionsDesc">
+            અહીંથી તમે નવો વ્યવહાર (આપ્યા/લીધા) નોંધી શકો છો અથવા નવો સભ્ય ઉમેરી શકો છો.
+          </p>
+          <div class="quick-actions-grid">
+            <button type="button" class="btn btn-primary quick-action-btn" onclick="app.openAddTxnModal()">
+              <span class="btn-icon-symbol">➕</span>
+              <span data-i18n="addTransaction">વ્યવહાર ઉમેરો</span>
+            </button>
+            <button type="button" class="btn btn-secondary quick-action-btn" onclick="app.openAddMemberModal()">
+              <span class="btn-icon-symbol">👤</span>
+              <span data-i18n="addMember">નવા સભ્ય ઉમેરો</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Security Card -->
         <div class="settings-section-card">
           <div class="settings-card-title">🔒 <span data-i18n="securityTitle">સુરક્ષા અને એન્ક્રિપ્શન</span></div>
@@ -312,11 +342,6 @@
       </section>
 
     </main>
-
-    <!-- FLOATING ACTION BUTTON -->
-    <div class="fab-container">
-      <button class="fab-btn" title="નવો વ્યવહાર અથવા સભ્ય ઉમેરો" onclick="app.openAddTxnModal()">+</button>
-    </div>
 
     <!-- BOTTOM NAVIGATION BAR -->
     <nav class="bottom-nav-bar">

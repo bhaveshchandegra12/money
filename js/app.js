@@ -534,6 +534,13 @@ class KhatuApp {
       const d = new Date(lastSaved);
       lastSavedEl.innerText = d.toLocaleString('gu-IN');
     }
+
+    const members = window.StorageService.getMembers() || [];
+    const txns = window.StorageService.getTransactions() || [];
+    const qMembers = document.getElementById('quickStatsMembers');
+    const qTxns = document.getElementById('quickStatsTxns');
+    if (qMembers) qMembers.innerText = members.length;
+    if (qTxns) qTxns.innerText = txns.length;
   }
 
   // ================= MODAL HANDLERS ================= //

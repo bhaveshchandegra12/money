@@ -47,6 +47,10 @@ const TRANSLATIONS = {
     // Actions
     addMember: "નવા સભ્ય ઉમેરો",
     addTransaction: "વ્યવહાર ઉમેરો",
+    quickActionsTitle: "નવો વ્યવહાર અને સભ્ય ઉમેરો",
+    quickActionsDesc: "અહીંથી તમે નવો વ્યવહાર (આપ્યા/લીધા) નોંધી શકો છો અથવા નવો સભ્ય ઉમેરી શકો છો.",
+    totalMembersCount: "કુલ સભ્યો",
+    totalTxnsCount: "કુલ વ્યવહારો",
     gaveMoney: "મેં આપ્યા / દીધા",
     receivedMoney: "મેં લીધા / જમા કર્યા",
     settleUp: "હિસાબ ક્લિયર કરો",
@@ -143,6 +147,10 @@ const TRANSLATIONS = {
     // Actions
     addMember: "Add Member",
     addTransaction: "Add Transaction",
+    quickActionsTitle: "Add Transaction & Member",
+    quickActionsDesc: "Record a new transaction (gave/received) or add a new member from here.",
+    totalMembersCount: "Total Members",
+    totalTxnsCount: "Total Transactions",
     gaveMoney: "I Gave (Money Out)",
     receivedMoney: "I Received (Money In / Jama)",
     settleUp: "Settle Full Amount",
