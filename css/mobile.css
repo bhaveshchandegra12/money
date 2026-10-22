@@ -1,0 +1,126 @@
+/* ===================================================================
+   KHATU - Mobile First Responsive & Touch Optimization
+   Ensures native mobile app feel, notch handling, and safe areas
+   =================================================================== */
+
+@media (max-width: 640px) {
+  body {
+    background-color: var(--bg-surface);
+  }
+
+  .app-wrapper {
+    max-width: 100%;
+    box-shadow: none;
+    min-height: 100dvh;
+  }
+
+  /* Support for iOS Home Indicator and Notch */
+  .bottom-nav-bar {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .fab-container {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    padding: 0 16px;
+  }
+
+  .app-header {
+    padding-top: calc(12px + env(safe-area-inset-top, 0px));
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .main-content {
+    padding: 14px 16px calc(86px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .modal-sheet {
+    max-height: 85vh;
+    border-radius: 24px 24px 0 0;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Touch-friendly larger tap targets */
+  .member-card {
+    padding: 14px;
+  }
+
+  .nav-tab {
+    padding: 6px 10px;
+  }
+
+  .stat-card {
+    padding: 14px;
+  }
+
+  .stat-value {
+    font-size: 20px;
+  }
+
+  .banner-amount {
+    font-size: 32px;
+  }
+
+  .pills-breakdown-row {
+    gap: 6px;
+  }
+
+  .breakdown-pill {
+    padding: 8px 4px;
+  }
+
+  .pill-value {
+    font-size: 12px;
+  }
+}
+
+/* Desktop layout preview container enhancement */
+@media (min-width: 641px) {
+  body {
+    background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #030712 100%);
+    padding: 24px 0;
+  }
+
+  .app-wrapper {
+    border-radius: 36px;
+    border: 8px solid #1f293d;
+    overflow: hidden;
+    min-height: 880px;
+    max-height: 92vh;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Custom smooth scrollbar inside the app wrapper */
+  .app-wrapper {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+
+  .app-wrapper::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .app-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+  }
+
+  .bottom-nav-bar, .app-header {
+    max-width: 504px; /* Matches inner width minus desktop border */
+  }
+
+  .fab-container {
+    max-width: 504px;
+  }
+
+  .modal-sheet {
+    max-width: 504px;
+    border-radius: 24px;
+    margin-bottom: 24px;
+  }
+
+  .modal-overlay {
+    align-items: center;
+  }
+}

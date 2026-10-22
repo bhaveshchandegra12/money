@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="gu" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="ખાતાવહી - સ્માર્ટ મની મેનેજમેન્ટ સિસ્ટમ. કોને આપ્યા અને કોની પાસેથી લેવાના છે તેનો સુરક્ષિત 256-bit એન્ક્રિપ્ટેડ હિસાબ.">
+  <meta name="theme-color" content="#0a0e17">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>ખાતાવહી - મની મેનેજમેન્ટ (Money Manager)</title>
+  
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <!-- ===================================================================
+       1. PIN LOCK & AUTHENTICATION SCREEN
+       =================================================================== -->
+  <div id="lockScreen" class="lock-screen-overlay">
+    <div class="lock-logo-badge">💰</div>
+    <h2 id="pinTitle" class="lock-title" data-i18n="enterPin">તમારો 4-અંકનો PIN દાખલ કરો</h2>
+    <p id="pinSubtitle" class="lock-subtitle">તમારા નાણાકીય હિસાબને સુરક્ષિત રાખવા માટે PIN દાખલ કરો.</p>
+
+    <form id="pinForm" class="pin-form" onsubmit="return false;">
+      <input type="password" id="pinInput" class="pin-input-field" maxlength="8" placeholder="••••" inputmode="numeric" autocomplete="off" required>
+      
+      <div id="pinConfirmGroup" class="form-group" style="display: none;">
+        <input type="password" id="pinConfirm" class="pin-input-field" maxlength="8" placeholder="ફરીથી PIN નાખો" inputmode="numeric" autocomplete="off">
+      </div>
+
+      <div id="pinError" class="pin-error-text"></div>
+      
+      <button type="submit" id="btnPinSubmit" class="btn btn-primary" style="width: 100%;">
+        🔒 <span data-i18n="unlock">અનલૉક કરો</span>
+      </button>
+    </form>
+  </div>
+
+  <!-- ===================================================================
+       2. MAIN APPLICATION CONTAINER
+       =================================================================== -->
+  <div id="mainApp" class="app-wrapper" style="display: none;">
+
+    <!-- TOP HEADER -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon">₹</div>
+        <div class="brand-title" data-i18n="appTitle">ખાતાવહી</div>
+      </div>
+      <div class="header-actions">
+        <!-- Language Switcher Button -->
+        <button id="btnLangToggle" class="btn-icon-header" title="Switch Language">EN</button>
+        <!-- Theme Toggle Button -->
+        <button id="btnThemeToggle" class="btn-icon-header" title="Toggle Theme">🌙</button>
+        <!-- Instant Lock Button -->
+        <button id="btnHeaderLock" class="btn-icon-header" title="Lock App">🔒</button>
+      </div>
+    </header>
+
+    <!-- MAIN BODY CONTENT -->
+    <main class="main-content">
+
+      <!-- ==============================================================
+           VIEW 1: HOME (MEMBERS & DASHBOARD)
+           ============================================================== -->
+      <section id="view-home" class="view-screen active">
+        <!-- Summary Cards Grid -->
+        <div class="stats-grid-wrapper">
+          <!-- Total to Receive (લેવાના છે) -->
+          <div class="stat-card receive-card">
+            <div class="stat-header">
+              <span class="stat-label" data-i18n="totalToReceive">કુલ લેવાના</span>
+              <div class="stat-icon-bubble">📥</div>
+            </div>
+            <div id="statTotalReceive" class="stat-value">₹0</div>
+          </div>
+
+          <!-- Total to Pay (દેવાના છે) -->
+          <div class="stat-card pay-card">
+            <div class="stat-header">
+              <span class="stat-label" data-i18n="totalToPay">કુલ દેવાના</span>
+              <div class="stat-icon-bubble">📤</div>
+            </div>
+            <div id="statTotalPay" class="stat-value">₹0</div>
+          </div>
+        </div>
+
+        <!-- Net Market Balance Banner -->
+        <div class="net-balance-banner">
+          <div class="net-balance-left">
+            <div class="net-title" data-i18n="netBalance">ચોખ્ખો બાકી હિસાબ</div>
+            <div id="statNetBalance" class="net-amount">₹0</div>
+          </div>
+          <span id="statNetBadge" class="badge badge-neutral" data-i18n="settled">સરભર</span>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="search-filter-section">
+          <div class="search-box-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInputMembers" class="search-input" placeholder="નામ અથવા મોબાઈલ શોધો..." data-i18n-placeholder="searchPlaceholder">
+          </div>
+          <div class="filter-chips-row">
+            <button class="filter-chip active" data-filter="ALL" data-i18n="statusAll">બધા</button>
+            <button class="filter-chip" data-filter="RECEIVE" data-i18n="statusReceive">લેવાના છે</button>
+            <button class="filter-chip" data-filter="PAY" data-i18n="statusPay">દેવાના છે</button>
+            <button class="filter-chip" data-filter="SETTLED" data-i18n="statusSettled">સરભર (0)</button>
+          </div>
+        </div>
+
+        <!-- Members List -->
+        <div id="membersListContainer" class="members-list-wrapper">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           VIEW 2: MEMBER DETAIL & LEDGER (KHATAVAHI)
+           ============================================================== -->
+      <section id="view-member-detail" class="view-screen">
+        <!-- Top Nav & Actions -->
+        <div class="detail-top-nav">
+          <button class="btn-back" onclick="app.switchView('home')">
+            ← <span>પાછા જાઓ</span>
+          </button>
+          <div class="detail-actions-right">
+            <button class="btn-icon-header" title="Call" onclick="app.callActiveMember()">📞</button>
+            <button id="detailBtnWhatsApp" class="btn-icon-header" title="WhatsApp Reminder" onclick="app.sendWhatsAppReminder()">💬</button>
+            <button class="btn-icon-header" title="Edit Member" onclick="app.openAddMemberModal(app.activeMemberId)">✏️</button>
+            <button class="btn-icon-header" title="Delete Member" onclick="app.deleteActiveMember()">🗑️</button>
+          </div>
+        </div>
+
+        <!-- Member Header Card -->
+        <div class="member-detail-header-card">
+          <h2 id="detailMemberName" class="detail-member-title">રમેશભાઈ</h2>
+          <div id="detailMemberPhone" class="detail-member-sub">📞 9898012345</div>
+
+          <!-- Dynamic Big Status Card -->
+          <div id="detailBalanceCard" class="balance-card-banner receive-banner">
+            <div id="detailStatusText" class="banner-status-title">હજુ ₹0 લેવાના છે</div>
+            <div id="detailBalanceAmount" class="banner-amount">₹0</div>
+            <div id="detailBalanceSubNote" class="banner-subnote">બાકી લેતી-દેતી રકમ</div>
+          </div>
+
+          <!-- 3-Pill Breakdown -->
+          <div class="pills-breakdown-row">
+            <div class="breakdown-pill">
+              <div class="pill-label" data-i18n="totalGiven">કુલ આપ્યા</div>
+              <div id="detailTotalGiven" class="pill-value color-danger">₹0</div>
+            </div>
+            <div class="breakdown-pill">
+              <div class="pill-label" data-i18n="totalReceived">કુલ જમા</div>
+              <div id="detailTotalReceived" class="pill-value color-success">₹0</div>
+            </div>
+            <div class="breakdown-pill">
+              <div class="pill-label" data-i18n="transactionsCount">વ્યવહારો</div>
+              <div id="detailTxnCount" class="pill-value">0 વખત</div>
+            </div>
+          </div>
+
+          <!-- Fast Transaction Actions -->
+          <div class="quick-ledger-actions">
+            <!-- Give Money Button -->
+            <button class="btn-give-action" onclick="app.openAddTxnModal('GIVE')">
+              📤 <span data-i18n="gaveMoney">મેં આપ્યા / દીધા</span>
+            </button>
+            <!-- Receive / Jama Money Button -->
+            <button class="btn-receive-action" onclick="app.openAddTxnModal('TAKE')">
+              📥 <span data-i18n="receivedMoney">મેં લીધા / જમા</span>
+            </button>
+          </div>
+
+          <!-- Secondary Actions -->
+          <div class="secondary-actions-row">
+            <button class="btn-secondary-action" onclick="app.quickSettleActiveMember()">
+              ⚡ <span data-i18n="settleUp">હિસાબ સરભર કરો</span>
+            </button>
+            <button class="btn-secondary-action" onclick="app.sendWhatsAppReminder()">
+              📱 <span data-i18n="whatsappShare">WhatsApp મોકલો</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Transaction History Heading -->
+        <div class="section-heading-row">
+          <h3 class="section-title" data-i18n="transactionHistory">વ્યવહારની વિગત (ખાતાવહી)</h3>
+        </div>
+
+        <!-- Transactions Timeline -->
+        <div id="detailTxnsList" class="transactions-timeline">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           VIEW 3: ALL TRANSACTIONS
+           ============================================================== -->
+      <section id="view-transactions" class="view-screen">
+        <div class="section-heading-row">
+          <h3 class="section-title" data-i18n="tabTransactions">તમામ વ્યવહારોની યાદી</h3>
+        </div>
+        <div id="allTransactionsList" class="transactions-timeline">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           VIEW 4: ANALYTICS & REPORTS
+           ============================================================== -->
+      <section id="view-analytics" class="view-screen">
+        <div class="section-heading-row">
+          <h3 class="section-title" data-i18n="tabAnalytics">નાણાકીય હિસાબ રિપોર્ટ</h3>
+        </div>
+
+        <div class="settings-section-card">
+          <div class="settings-card-title">📊 મુખ્ય આંકડાઓ</div>
+          <div class="analytics-row">
+            <span data-i18n="totalToReceive">કુલ લેવાના</span>
+            <strong id="analyticsTotalToReceive" class="color-success">₹0</strong>
+          </div>
+          <div class="analytics-row">
+            <span data-i18n="totalToPay">કુલ દેવાના</span>
+            <strong id="analyticsTotalToPay" class="color-danger">₹0</strong>
+          </div>
+          <div class="analytics-row">
+            <span data-i18n="totalMembers">કુલ સભ્યો</span>
+            <strong id="analyticsTotalMembers">0</strong>
+          </div>
+          <div class="analytics-row">
+            <span data-i18n="transactionsCount">કુલ વ્યવહારો</span>
+            <strong id="analyticsTotalTxns">0</strong>
+          </div>
+        </div>
+
+        <div class="settings-section-card">
+          <div class="settings-card-title">🟢 સૌથી વધુ લેવાના બાકી (Top Debtors)</div>
+          <div id="topDebtorsList">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <div class="settings-section-card">
+          <div class="settings-card-title">🔴 સૌથી વધુ દેવાના બાકી (Top Creditors)</div>
+          <div id="topCreditorsList">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           VIEW 5: SETTINGS & BACKUP
+           ============================================================== -->
+      <section id="view-settings" class="view-screen">
+        <div class="section-heading-row">
+          <h3 class="section-title" data-i18n="tabSettings">સેટિંગ્સ અને બેકઅપ</h3>
+        </div>
+
+        <!-- Security Card -->
+        <div class="settings-section-card">
+          <div class="settings-card-title">🔒 <span data-i18n="securityTitle">સુરક્ષા અને એન્ક્રિપ્શન</span></div>
+          <p class="settings-desc" data-i18n="securityDesc">
+            તમારો હિસાબ 256-bit AES-GCM એન્ક્રિપ્શન સાથે સંપૂર્ણ સુરક્ષિત છે. GitHub પર કોઈ સીધો ડેટા જોઈ શકશે નહીં.
+          </p>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+            છેલ્લે સેવ થયેલ: <strong id="settingsLastSaved">-</strong>
+          </div>
+          <button class="btn btn-secondary" onclick="app.showLockScreen(true)">
+            🔑 <span data-i18n="changePin">PIN બદલો</span>
+          </button>
+        </div>
+
+        <!-- Data & JSON Backup Card -->
+        <div class="settings-section-card">
+          <div class="settings-card-title">📁 ડેટા ફોલ્ડર અને JSON બેકઅપ</div>
+          <p class="settings-desc">
+            તમારા તમામ વ્યવહારો JSON ફાઈલ તરીકે ડાઉનલોડ કરીને `data/` ફોલ્ડરમાં સેવ કરી શકો છો.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Encrypted Backup -->
+            <button class="btn btn-primary" onclick="app.exportEncrypted()">
+              🔐 <span data-i18n="encryptedBackup">એન્ક્રિપ્ટેડ JSON બેકઅપ</span>
+            </button>
+            <!-- Plain Backup -->
+            <button class="btn btn-secondary" onclick="app.exportPlain()">
+              📄 <span data-i18n="plainBackup">સામાન્ય JSON ડાઉનલોડ</span>
+            </button>
+            <!-- Import JSON -->
+            <button class="btn btn-secondary" onclick="app.triggerImportFile()">
+              📥 <span data-i18n="importData">JSON માંથી ડેટા લાવો</span>
+            </button>
+            <!-- Load Demo Data -->
+            <button class="btn btn-secondary" onclick="app.loadDemoData()">
+              🚀 <span data-i18n="sampleData">ડેમો ડેટા લોડ કરો (રમેશભાઈ)</span>
+            </button>
+          </div>
+          <input type="file" id="importFileInput" accept=".json" style="display: none;">
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-section-card" style="border-color: rgba(244, 63, 94, 0.3);">
+          <div class="settings-card-title" style="color: var(--color-pay);">⚠️ ચેતવણી / Danger Zone</div>
+          <p class="settings-desc">આનાથી બધો ડેટા ડિલીટ થશે અને એપ્લિકેશન શરૂઆતથી શરૂ થશે.</p>
+          <button class="btn btn-danger" onclick="app.handleResetAll()">
+            🗑️ <span data-i18n="clearData">તમામ ડેટા ડિલીટ કરો</span>
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FLOATING ACTION BUTTON -->
+    <div class="fab-container">
+      <button class="fab-btn" title="નવો વ્યવહાર અથવા સભ્ય ઉમેરો" onclick="app.openAddTxnModal()">+</button>
+    </div>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav class="bottom-nav-bar">
+      <div class="nav-tab active" data-view="home">
+        <span class="nav-tab-icon">👥</span>
+        <span data-i18n="tabHome">સભ્યો</span>
+      </div>
+      <div class="nav-tab" data-view="transactions">
+        <span class="nav-tab-icon">📝</span>
+        <span data-i18n="tabTransactions">વ્યવહાર</span>
+      </div>
+      <div class="nav-tab" data-view="analytics">
+        <span class="nav-tab-icon">📊</span>
+        <span data-i18n="tabAnalytics">રિપોર્ટ</span>
+      </div>
+      <div class="nav-tab" data-view="settings">
+        <span class="nav-tab-icon">⚙️</span>
+        <span data-i18n="tabSettings">સેટિંગ્સ</span>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- ===================================================================
+       3. MODALS (BOTTOM SHEETS)
+       =================================================================== -->
+
+  <!-- ADD / EDIT MEMBER MODAL -->
+  <div id="modalMember" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-header-row">
+        <h3 id="modalMemberTitle" class="modal-title" data-i18n="addMember">નવા સભ્ય ઉમેરો</h3>
+        <button class="btn-close-modal" onclick="app.closeMemberModal()">✕</button>
+      </div>
+      <form id="formMember">
+        <div class="form-group">
+          <label class="form-label" data-i18n="memberName">સભ્યનું પૂરું નામ *</label>
+          <input type="text" id="memberInputName" class="form-input" placeholder="દા.ત. રમેશભાઈ પટેલ" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="memberPhone">મોબાઈલ નંબર</label>
+          <input type="tel" id="memberInputPhone" class="form-input" placeholder="દા.ત. 9898012345">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="memberNotes">નોંધ / ઓળખાણ (ઓપ્શનલ)</label>
+          <input type="text" id="memberInputNotes" class="form-input" placeholder="દા.ત. દુકાન પાડોશી / મિત્ર">
+        </div>
+        <div class="modal-footer-row">
+          <button type="button" class="btn btn-secondary" onclick="app.closeMemberModal()" data-i18n="cancel">રદ કરો</button>
+          <button type="submit" class="btn btn-primary" data-i18n="save">સાચવો</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT TRANSACTION MODAL -->
+  <div id="modalTransaction" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-header-row">
+        <h3 id="modalTxnTitle" class="modal-title" data-i18n="addTransaction">વ્યવહાર ઉમેરો</h3>
+        <button class="btn-close-modal" onclick="app.closeTxnModal()">✕</button>
+      </div>
+      <form id="formTransaction">
+        <!-- Select Member -->
+        <div class="form-group">
+          <label class="form-label" data-i18n="selectMember">સભ્ય પસંદ કરો *</label>
+          <select id="txnSelectMember" class="form-select" required>
+            <!-- Rendered dynamically -->
+          </select>
+        </div>
+
+        <!-- Transaction Type Radio Pills -->
+        <div class="form-group">
+          <label class="form-label" data-i18n="txnType">વ્યવહારનો પ્રકાર *</label>
+          <div class="radio-pill-group">
+            <div>
+              <input type="radio" id="txnTypeGive" name="txnType" value="GIVE" checked>
+              <label for="txnTypeGive" class="radio-pill-label">
+                📤 <span data-i18n="gaveMoney">મેં આપ્યા (દીધા)</span>
+              </label>
+            </div>
+            <div>
+              <input type="radio" id="txnTypeTake" name="txnType" value="TAKE">
+              <label for="txnTypeTake" class="radio-pill-label">
+                📥 <span data-i18n="receivedMoney">મેં લીધા (જમા)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Amount -->
+        <div class="form-group">
+          <label class="form-label" data-i18n="amount">રકમ (₹) *</label>
+          <input type="number" id="txnInputAmount" class="form-input" placeholder="0" min="1" step="any" required>
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label class="form-label" data-i18n="date">તારીખ</label>
+          <input type="date" id="txnInputDate" class="form-input" required>
+        </div>
+
+        <!-- Note / Reason -->
+        <div class="form-group">
+          <label class="form-label" data-i18n="txnReason">વિગત / કારણ (ઓપ્શનલ)</label>
+          <input type="text" id="txnInputNote" class="form-input" placeholder="દા.ત. ઉછીના આપ્યા, Google Pay, રોકડા">
+        </div>
+
+        <div class="modal-footer-row">
+          <button type="button" class="btn btn-secondary" onclick="app.closeTxnModal()" data-i18n="cancel">રદ કરો</button>
+          <button type="submit" class="btn btn-primary" data-i18n="save">સાચવો</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotification" class="toast">સંદેશ</div>
+
+  <!-- SCRIPTS -->
+  <script src="js/crypto.js"></script>
+  <script src="js/language.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(err => {
+          console.log('SW registration note:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

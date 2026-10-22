@@ -1,0 +1,21 @@
+{
+  "name": "ખાતાવહી - મની મેનેજમેન્ટ",
+  "short_name": "ખાતાવહી",
+  "description": "સ્માર્ટ મની મેનેજમેન્ટ અને ઉધાર-જમા ખાતાવહી સિસ્ટમ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0e17",
+  "theme_color": "#0a0e17",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

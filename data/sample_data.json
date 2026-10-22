@@ -1,0 +1,67 @@
+{
+  "version": "1.0.0",
+  "appName": "Khatu - Money Management System",
+  "currency": "₹",
+  "updatedAt": "2026-10-22T10:00:00.000Z",
+  "members": [
+    {
+      "id": "mem_ramesh",
+      "name": "રમેશભાઈ (Rameshbhai)",
+      "phone": "9898012345",
+      "notes": "દુકાન પાડોશી",
+      "createdAt": "2026-10-15T09:30:00.000Z"
+    },
+    {
+      "id": "mem_suresh",
+      "name": "સુરેશભાઈ (Sureshbhai)",
+      "phone": "9825067890",
+      "notes": "ઓફિસ મિત્ર",
+      "createdAt": "2026-10-16T11:00:00.000Z"
+    },
+    {
+      "id": "mem_mahesh",
+      "name": "મહેશભાઈ (Maheshbhai)",
+      "phone": "9909054321",
+      "notes": "મકાન માલિક",
+      "createdAt": "2026-10-18T14:15:00.000Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "txn_001",
+      "memberId": "mem_ramesh",
+      "type": "GIVE",
+      "amount": 5000,
+      "date": "2026-10-18",
+      "note": "ઇમરજન્સી માટે ઉછીના આપ્યા",
+      "createdAt": "2026-10-18T10:00:00.000Z"
+    },
+    {
+      "id": "txn_002",
+      "memberId": "mem_ramesh",
+      "type": "TAKE",
+      "amount": 3000,
+      "date": "2026-10-20",
+      "note": "રોકડા જમા આપ્યા (ગૂગલ પે)",
+      "createdAt": "2026-10-20T16:30:00.000Z"
+    },
+    {
+      "id": "txn_003",
+      "memberId": "mem_suresh",
+      "type": "GIVE",
+      "amount": 1500,
+      "date": "2026-10-19",
+      "note": "પેટ્રોલ અને નાસ્તાના આપ્યા",
+      "createdAt": "2026-10-19T12:00:00.000Z"
+    },
+    {
+      "id": "txn_004",
+      "memberId": "mem_mahesh",
+      "type": "TAKE",
+      "amount": 2500,
+      "date": "2026-10-17",
+      "note": "એડવાન્સ લીધા (આપણે દેવાના છે)",
+      "createdAt": "2026-10-17T18:00:00.000Z"
+    }
+  ]
+}
